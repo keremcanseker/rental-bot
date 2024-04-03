@@ -354,7 +354,8 @@ export default function Filters() {
 
     const currentUser = await getUserIdFromCurrentSession();
     const API = "https://api-v2-theta.vercel.app";
-    const result = await fetch(`${API}/send-request`, {
+    const API2 = "https://api-ff9q.onrender.com";
+    const result = await fetch(`${API2}/send-request`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
