@@ -369,6 +369,17 @@ export default function Filters() {
         setSendedUrls(currentUrls.data as any);
       }
     }
+    const result2 = await fetch(`${API}/send-request`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ url: finalUrl, user: currentUser }),
+    });
+    const data2 = await result2.json();
+    // if (data2.message === "success") {
+    //   setReturnedData(data2.data);
+    // }
   }
 
   return (
