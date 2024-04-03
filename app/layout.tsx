@@ -1,5 +1,8 @@
 import { GeistSans } from "geist/font/sans";
 import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "sonner";
+import { Loader } from "lucide-react";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -7,8 +10,8 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Next.js and Supabase Starter Kit",
-  description: "The fastest way to build apps with Next.js and Supabase",
+  title: "Rent House",
+  description: "Rent houses automated",
 };
 
 export default function RootLayout({
@@ -18,10 +21,24 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={GeistSans.className}>
-      <body className="bg-background text-foreground">
-        <main className="min-h-screen flex flex-col items-center">
-          {children}
-        </main>
+      <body className="bg-background text-foreground antialiased">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <main className="min-h-screen w-screen">{children}</main>
+          <Toaster
+            icons={{
+              loading: <Loader />,
+            }}
+            richColors
+            toastOptions={{
+              className: "class",
+            }}
+          ></Toaster>
+        </ThemeProvider>
       </body>
     </html>
   );
