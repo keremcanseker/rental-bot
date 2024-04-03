@@ -38,6 +38,9 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
 import { set } from "zod";
+import { getUserIdFromCurrentSession } from "@/lib/auth";
+import { get } from "http";
+import { getUrls } from "@/lib/db";
 
 type Checked = DropdownMenuCheckboxItemProps["checked"];
 export default function Filters() {
@@ -92,6 +95,7 @@ export default function Filters() {
   const [constructionPeriod, setConstructionPeriod] = useState(
     States.constructionPeriodState
   );
+  const [sendedUrls, setSendedUrls] = useState([]);
 
   async function generateLink() {
     console.log("Generating link");
@@ -348,22 +352,32 @@ export default function Filters() {
     setLink(finalUrl);
     console.log(finalUrl);
 
+    const currentUser = await getUserIdFromCurrentSession();
     // send to backend
-    const result = await fetch("http://127.0.0.1:8000/send-request", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ url: finalUrl }),
-    });
+    const result = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL!}/send-request`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ url: finalUrl, user: currentUser }),
+        mode: "no-cors",
+      }
+    );
     const data = await result.json();
-    console.log(data);
+    if (data.message === "success") {
+      const currentUrls = await getUrls();
+      if (currentUrls.data !== undefined) {
+        setSendedUrls(currentUrls.data as any);
+      }
+    }
   }
 
   return (
     <main className="flex  flex-col  gap-4 p-4 lg:gap-6 lg:p-6 ">
       <div className="flex flex-1  flex-row flex-wrap  ">
-        <LogoutButton />
+        {/* <LogoutButton /> */}
         <Sheet>
           <SheetHeader className="flex  flex-row w-full justify-between">
             <SheetTitle className="p-2 font-bold hidden sm:block text-2xl">
@@ -833,6 +847,15 @@ export default function Filters() {
       {link.length > 0 && <p className="text-base">{link}</p>}
 
       {returnedData.length > 0 && <p className="text-base">{returnedData}</p>}
+
+      {sendedUrls.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <Label className="text-lg">Sended Urls</Label>
+          {sendedUrls.map((url) => (
+            <p className="text-base">{url}</p>
+          ))}
+        </div>
+      )}
     </main>
   );
 }
