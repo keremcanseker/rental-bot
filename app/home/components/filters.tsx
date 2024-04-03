@@ -353,18 +353,15 @@ export default function Filters() {
     console.log(finalUrl);
 
     const currentUser = await getUserIdFromCurrentSession();
-    // send to backend
-    const result = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL!}/send-request`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ url: finalUrl, user: currentUser }),
-        mode: "no-cors",
-      }
-    );
+    const API = "https://api-v2-y96au5qv3-keremcansekers-projects.vercel.app";
+    const result = await fetch(`${API}/send-request`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ url: finalUrl, user: currentUser }),
+      mode: "no-cors",
+    });
     const data = await result.json();
     if (data.message === "success") {
       const currentUrls = await getUrls();
