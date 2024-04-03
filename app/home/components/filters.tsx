@@ -360,7 +360,6 @@ export default function Filters() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ url: finalUrl, user: currentUser }),
-      mode: "no-cors",
     });
     const data = await result.json();
     if (data.message === "success") {
