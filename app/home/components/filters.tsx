@@ -353,7 +353,7 @@ export default function Filters() {
     console.log(finalUrl);
 
     const currentUser = await getUserIdFromCurrentSession();
-    const API = "https://api-v2-y96au5qv3-keremcansekers-projects.vercel.app";
+    const API = "https://api-v2-theta.vercel.app";
     const result = await fetch(`${API}/send-request`, {
       method: "POST",
       headers: {
