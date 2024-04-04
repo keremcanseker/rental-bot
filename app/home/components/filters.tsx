@@ -355,7 +355,8 @@ export default function Filters() {
     const currentUser = await getUserIdFromCurrentSession();
     const API = "https://api-v2-theta.vercel.app";
     const API2 = "https://api-ff9q.onrender.com";
-    const result = await fetch(`${API2}/send-request`, {
+    const API3 = "https://api-production-f5b6.up.railway.app";
+    const result = await fetch(`${API3}/send-request`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -369,14 +370,14 @@ export default function Filters() {
         setSendedUrls(currentUrls.data as any);
       }
     }
-    const result2 = await fetch(`${API}/send-request`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ url: finalUrl, user: currentUser }),
-    });
-    const data2 = await result2.json();
+    // const result2 = await fetch(`${API}/send-request`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({ url: finalUrl, user: currentUser }),
+    // });
+    // const data2 = await result2.json();
     // if (data2.message === "success") {
     //   setReturnedData(data2.data);
     // }
