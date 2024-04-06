@@ -40,6 +40,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 import { redirect } from "next/navigation";
 import Filters from "./components/filters";
+import Urls from "./components/urls";
 
 export default async function ProtectedPage() {
   const session = await getUserSession();
@@ -203,6 +204,7 @@ export default async function ProtectedPage() {
             </DropdownMenu> */}
         </header>
         <Filters />
+        <Urls></Urls>
       </div>
     </div>
     // </section>

@@ -356,6 +356,7 @@ export default function Filters() {
     const API = "https://api-v2-theta.vercel.app";
     const API2 = "https://api-ff9q.onrender.com";
     const API3 = "https://api-production-f5b6.up.railway.app";
+    const JSAPI = "http://127.0.0.1:8000";
     const result = await fetch(`${API3}/send-request`, {
       method: "POST",
       headers: {
@@ -364,23 +365,9 @@ export default function Filters() {
       body: JSON.stringify({ url: finalUrl, user: currentUser }),
     });
     const data = await result.json();
-    if (data.message === "success") {
-      const currentUrls = await getUrls();
-      if (currentUrls.data !== undefined) {
-        setSendedUrls(currentUrls.data as any);
-      }
+    if (data.message === "Request sent successfully.") {
+      // fetch all urls from supabase
     }
-    // const result2 = await fetch(`${API}/send-request`, {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({ url: finalUrl, user: currentUser }),
-    // });
-    // const data2 = await result2.json();
-    // if (data2.message === "success") {
-    //   setReturnedData(data2.data);
-    // }
   }
 
   return (
