@@ -204,7 +204,6 @@ export default async function ProtectedPage() {
             </DropdownMenu> */}
         </header>
         <Filters />
-        <Urls></Urls>
       </div>
     </div>
     // </section>

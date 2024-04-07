@@ -87,3 +87,9 @@ export async function getUserIdFromCurrentSession() {
   const { data } = await supabase.auth.getSession();
   return data.session?.user.id;
 }
+
+export async function getUserEmailFromCurrentSession() {
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getSession();
+  return data.session?.user.email;
+}

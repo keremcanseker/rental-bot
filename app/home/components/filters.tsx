@@ -31,14 +31,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Menu, Euro } from "lucide-react";
+import { Menu, Euro, Loader } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import * as States from "./filtertypes";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
 import { set } from "zod";
-import { getUserIdFromCurrentSession } from "@/lib/auth";
+import {
+  getUserEmailFromCurrentSession,
+  getUserIdFromCurrentSession,
+} from "@/lib/auth";
 import { get } from "http";
 import { getUrls } from "@/lib/db";
 
@@ -47,6 +50,7 @@ export default function Filters() {
   const [link, setLink] = useState<string>("");
   const [returnedData, setReturnedData] = useState<any>([]); //
   const [showStatusBar, setShowStatusBar] = useState<Checked>(true);
+  const [sendingRequest, setSendingRequest] = useState<boolean>(false);
   const [buyOrRent, setBuyOrRent] = useState<"Buy" | "Rent">("Buy");
   const [startPrice, setStartPrice] = useState<number>(0);
   const [endPrice, setEndPrice] = useState<number>(0);
@@ -98,6 +102,7 @@ export default function Filters() {
   const [sendedUrls, setSendedUrls] = useState([]);
 
   async function generateLink() {
+    setSendingRequest(true);
     console.log("Generating link");
     const baseUrl = "https://www.funda.nl/zoeken/";
     console.log(locationState);
@@ -353,20 +358,28 @@ export default function Filters() {
     console.log(finalUrl);
 
     const currentUser = await getUserIdFromCurrentSession();
+    const currentUserEmail = await getUserEmailFromCurrentSession();
     const API = "https://api-v2-theta.vercel.app";
     const API2 = "https://api-ff9q.onrender.com";
     const API3 = "https://api-production-f5b6.up.railway.app";
     const JSAPI = "http://127.0.0.1:8000";
-    const result = await fetch(`${API3}/send-request`, {
+    const result = await fetch(`${JSAPI}/send-request`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ url: finalUrl, user: currentUser }),
+      body: JSON.stringify({
+        url: finalUrl,
+        user: currentUser,
+        email: currentUserEmail,
+      }),
     });
     const data = await result.json();
-    if (data.message === "Request sent successfully.") {
-      // fetch all urls from supabase
+    console.log(data);
+    if (data.message.includes("success")) {
+      setSendingRequest(false);
+      console.log(data.sent_urls);
+      setSendedUrls(data.sent_urls);
     }
   }
 
@@ -417,7 +430,7 @@ export default function Filters() {
               <Label className="text-lg">Type of House</Label>
               <div className="flex flex-col gap-2">
                 {Object.keys(States.initialTypeOfHouseState).map((key) => (
-                  <div className="flex gap-2 items-center">
+                  <div className="flex gap-2 items-center" key={key}>
                     <Checkbox
                       id={key}
                       checked={typeOfHouse[key as keyof typeof typeOfHouse]}
@@ -469,7 +482,7 @@ export default function Filters() {
               <Label className="text-lg">Available</Label>
               <div className="flex flex-col gap-2 ">
                 {Object.keys(States.initialAvailableState).map((key) => (
-                  <div className="flex gap-2 items-center">
+                  <div className="flex gap-2 items-center" key={key}>
                     <Checkbox
                       id={key}
                       checked={available[key as keyof typeof available]}
@@ -494,7 +507,7 @@ export default function Filters() {
               <Label className="text-lg">Location</Label>
               <div className="flex flex-col gap-2">
                 {Object.keys(States.initialLocationState).map((key) => (
-                  <div className="flex gap-2 items-center">
+                  <div className="flex gap-2 items-center" key={key}>
                     <Checkbox
                       key={key}
                       checked={locationState[key as keyof typeof locationState]}
@@ -660,7 +673,7 @@ export default function Filters() {
               <Label className="text-lg">Energy Label</Label>
               <div className="flex flex-col gap-2">
                 {Object.keys(States.initialEnegyLabelState).map((key) => (
-                  <div className="flex gap-2 items-center">
+                  <div className="flex gap-2 items-center" key={key}>
                     <Checkbox
                       id={key}
                       checked={energyLabel[key as keyof typeof energyLabel]}
@@ -684,7 +697,7 @@ export default function Filters() {
               <Label className="text-lg">Outdoor Space</Label>
               <div className="flex flex-col gap-2">
                 {Object.keys(States.initialOutdoorSpaceState).map((key) => (
-                  <div className="flex gap-2 items-center">
+                  <div className="flex gap-2 items-center" key={key}>
                     <Checkbox
                       id={key}
                       checked={outdoorSpace[key as keyof typeof outdoorSpace]}
@@ -708,7 +721,7 @@ export default function Filters() {
               <Label className="text-lg">Garden Location</Label>
               <div className="flex flex-col gap-2">
                 {Object.keys(States.initialGardenLocationState).map((key) => (
-                  <div className="flex gap-2 items-center">
+                  <div className="flex gap-2 items-center" key={key}>
                     <Checkbox
                       id={key}
                       checked={
@@ -734,7 +747,7 @@ export default function Filters() {
               <Label className="text-lg">Type of Construction</Label>
               <div className="flex flex-col gap-2">
                 {Object.keys(States.initialConstructionTypeState).map((key) => (
-                  <div className="flex gap-2 items-center">
+                  <div className="flex gap-2 items-center" key={key}>
                     <Checkbox
                       id={key}
                       checked={
@@ -760,7 +773,7 @@ export default function Filters() {
               <Label className="text-lg">Properties</Label>
               <div className="flex flex-col gap-2">
                 {Object.keys(States.initialPropertiesState).map((key) => (
-                  <div className="flex gap-2 items-center">
+                  <div className="flex gap-2 items-center" key={key}>
                     <Checkbox
                       id={key}
                       checked={properties[key as keyof typeof properties]}
@@ -784,7 +797,7 @@ export default function Filters() {
               <Label className="text-lg">Garage</Label>
               <div className="flex flex-col gap-2">
                 {Object.keys(States.initialGarageState).map((key) => (
-                  <div className="flex gap-2 items-center">
+                  <div className="flex gap-2 items-center" key={key}>
                     <Checkbox
                       id={key}
                       checked={garage[key as keyof typeof garage]}
@@ -808,7 +821,7 @@ export default function Filters() {
               <Label className="text-lg">Construction Period</Label>
               <div className="flex flex-col gap-2">
                 {Object.keys(States.constructionPeriodState).map((key) => (
-                  <div className="flex gap-2 items-center">
+                  <div className="flex gap-2 items-center" key={key}>
                     <Checkbox
                       id={key}
                       checked={
@@ -836,8 +849,19 @@ export default function Filters() {
         </Sheet>
       </div>
 
-      <Button className="w-min" onClick={generateLink}>
-        Apply Filters
+      <Button
+        className="w-min"
+        onClick={generateLink}
+        disabled={sendingRequest}
+      >
+        {sendingRequest ? (
+          <>
+            Sending request
+            <Loader className="w-6 h-6 animate-spin ml-1"></Loader>
+          </>
+        ) : (
+          "Apply Filters"
+        )}
       </Button>
 
       {link.length > 0 && <p className="text-base">{link}</p>}
