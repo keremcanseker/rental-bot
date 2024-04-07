@@ -10,10 +10,11 @@ export type Url = {
 export async function getUrls(): Promise<Url[] | { error: string }> {
   const supabase = await createSupabaseClientForStart();
   const user = await getUserIdFromCurrentSession();
+  console.log(user);
   const { data, error } = await supabase
     .from("urls")
     .select("url, created_at")
-    .eq("user_id", user);
+    .eq("user", user);
 
   if (error) {
     return { error: error.message };
