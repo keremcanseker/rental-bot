@@ -83,7 +83,7 @@ export async function getUserWithId(id: string) {
 
 // get user id from session
 export async function getUserIdFromCurrentSession() {
-  const supabase = await createClient();
+  const supabase = await createSupabaseClientForStart();
   const { data } = await supabase.auth.getSession();
   return data.session?.user.id;
 }

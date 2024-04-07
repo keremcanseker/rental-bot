@@ -33,7 +33,7 @@ import {
 } from "@/components/ui/select";
 import { Menu, Euro, Loader } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
-import * as States from "./filtertypes";
+import * as States from "../components/filtertypes";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
@@ -46,7 +46,7 @@ import { get } from "http";
 import { getUrls } from "@/lib/db";
 
 type Checked = DropdownMenuCheckboxItemProps["checked"];
-export default function Filters() {
+export default function page() {
   const [link, setLink] = useState<string>("");
   const [returnedData, setReturnedData] = useState<any>([]); //
   const [showStatusBar, setShowStatusBar] = useState<Checked>(true);

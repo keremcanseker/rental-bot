@@ -3,12 +3,12 @@ export default async function Urls() {
   const data = await getUrls();
 
   if ("error" in data) {
-    return <p className="text-red-500 text-center">Failed to fetch URLs</p>;
+    return <p className="text-red-500 text-center">{data.error}</p>;
   }
 
   return (
     <div className="flex flex-col gap-4 p-8 ">
-      <h1 className="text-2xl font-semibold">Your URLs</h1>
+      <h1 className="text-2xl font-semibold">Applied Links</h1>
       {data.map((url) => (
         <div
           key={url.url}
@@ -22,7 +22,9 @@ export default async function Urls() {
           >
             {url.url}
           </a>
-          <p className="text-sm text-gray-500">{url.created_at}</p>
+          <p className="text-sm text-gray-500">
+            {new Date(url.created_at).toLocaleString()}
+          </p>
         </div>
       ))}
     </div>
