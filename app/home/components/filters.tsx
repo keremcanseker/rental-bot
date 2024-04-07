@@ -363,7 +363,7 @@ export default function Filters() {
     const API2 = "https://api-ff9q.onrender.com";
     const API3 = "https://api-production-f5b6.up.railway.app";
     const JSAPI = "http://127.0.0.1:8000";
-    const result = await fetch(`${JSAPI}/send-request`, {
+    const result = await fetch(`${API3}/send-request`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
